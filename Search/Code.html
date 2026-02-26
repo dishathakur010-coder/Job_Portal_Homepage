@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JobFinder | Student Job Portal</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#eef2ff;
+}
+
+.navbar{
+    background:#1e40af;
+    color:white;
+    padding:18px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:26px;
+    font-weight:bold;
+}
+
+.nav-links a{
+    color:white;
+    text-decoration:none;
+    margin-right:20px;
+    font-weight:bold;
+}
+
+.nav-links button{
+    padding:8px 16px;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.login{
+    background:white;
+    color:#1e40af;
+}
+
+.register{
+    background:#22c55e;
+    color:white;
+    margin-left:10px;
+}
+
+.hero{
+    background:linear-gradient(to right,#2563eb,#60a5fa);
+    padding:100px 20px;
+    text-align:center;
+    color:white;
+}
+
+.hero h1{
+    font-size:50px;
+    margin-bottom:15px;
+}
+
+.search-box{
+    background:white;
+    width:85%;
+    margin:40px auto 0;
+    padding:25px;
+    display:flex;
+    gap:12px;
+    border-radius:12px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.25);
+}
+
+.search-box input{
+    flex:1;
+    padding:14px;
+    border:2px solid #c7d2fe;
+    font-size:15px;
+}
+
+.search-box button{
+    padding:14px 20px;
+    background:#1e40af;
+    color:white;
+    border:none;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.reset{
+    background:#64748b !important;
+}
+
+.section{
+    width:85%;
+    margin:70px auto;
+}
+
+.section h2{
+    font-size:32px;
+    color:#1e293b;
+    margin-bottom:25px;
+    border-left:8px solid #2563eb;
+    padding-left:12px;
+}
+
+.job-card{
+    background:white;
+    padding:22px;
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    border-radius:14px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.15);
+    transition:0.3s;
+}
+
+.job-card img{
+    width:65px;
+}
+
+.job-card h3{
+    font-size:22px;
+}
+
+.job-card p{
+    color:#475569;
+}
+
+.job-card button{
+    margin-left:auto;
+    padding:12px 20px;
+    background:#22c55e;
+    color:white;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.delete{
+    background:#ef4444 !important;
+    margin-left:10px;
+}
+
+footer{
+    background:#020617;
+    color:white;
+    text-align:center;
+    padding:30px;
+    font-size:15px;
+}
+
+.add-job input{
+    padding:12px;
+    margin-right:10px;
+    border:2px solid #c7d2fe;
+}
+.add-job button{
+    padding:12px 18px;
+    background:#1e40af;
+    color:white;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <div class="logo">JobFinder</div>
+    <div class="nav-links">
+        <a href="#">Jobs</a>
+        <a href="#">Companies</a>
+        <button class="login">Login</button>
+        <button class="register">Register</button>
+    </div>
+</div>
+
+<div class="hero">
+    <h1>Find Your Dream Job</h1>
+
+    <div class="search-box">
+        <input type="text" id="searchTitle" placeholder="Skill / Role">
+        <input type="text" id="searchLocation" placeholder="Location">
+        <button id="searchBtn">Search</button>
+        <button id="resetBtn" class="reset">Reset</button>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Add New Job</h2>
+    <div class="add-job">
+        <input id="title" placeholder="Job Title">
+        <input id="company" placeholder="Company">
+        <input id="location" placeholder="Location">
+        <button id="addBtn">Add Job</button>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Latest Job Openings</h2>
+    <p id="jobCount"></p>
+    <div id="jobList"></div>
+</div>
+
+<footer>
+    © 2026 JobFinder | Mini Project – 2nd Year CSE
+</footer>
+
+<script>
+
+let titleInput = document.querySelector('#title');
+let companyInput = document.querySelector('#company');
+let locationInput = document.querySelector('#location');
+let addBtn = document.querySelector('#addBtn');
+let jobList = document.querySelector('#jobList');
+let jobCount = document.querySelector('#jobCount');
+
+let searchTitle = document.querySelector('#searchTitle');
+let searchLocation = document.querySelector('#searchLocation');
+let searchBtn = document.querySelector('#searchBtn');
+let resetBtn = document.querySelector('#resetBtn');
+
+addBtn.addEventListener('click', addJob);
+searchBtn.addEventListener('click', searchJobs);
+resetBtn.addEventListener('click', resetSearch);
+
+function addJob(){
+
+    if(titleInput.value==='' || companyInput.value==='' || locationInput.value===''){
+        alert("Please fill all fields");
+        return;
+    }
+
+    let card = document.createElement('div');
+    card.className = 'job-card';
+
+    card.innerHTML = `
+        <img src="https://cdn-icons-png.flaticon.com/512/906/906343.png">
+        <div>
+            <h3>${titleInput.value}</h3>
+            <p>${companyInput.value} • ${locationInput.value}</p>
+        </div>
+        <button class="apply">Apply</button>
+        <button class="delete">Delete</button>
+    `;
+
+    jobList.appendChild(card);
+    updateCount();
+
+    titleInput.value = "";
+    companyInput.value = "";
+    locationInput.value = "";
+
+    let applyBtn = card.querySelector('.apply');
+    let deleteBtn = card.querySelector('.delete');
+
+    applyBtn.addEventListener('click', function(){
+        applyBtn.innerText = "Applied";
+        applyBtn.disabled = true;
+        applyBtn.style.background = "#94a3b8";
+    });
+
+    deleteBtn.addEventListener('click', function(){
+        card.remove();
+        updateCount();
+    });
+
+    card.addEventListener('mouseover', function(){
+        card.style.transform = "scale(1.03)";
+    });
+
+    card.addEventListener('mouseout', function(){
+        card.style.transform = "scale(1)";
+    });
+}
+
+function updateCount(){
+    jobCount.innerText = "Total Jobs Available: " + jobList.children.length;
+}
+
+function searchJobs(){
+
+    let titleValue = searchTitle.value.toLowerCase();
+    let locationValue = searchLocation.value.toLowerCase();
+
+    let jobs = document.querySelectorAll('.job-card');
+
+    jobs.forEach(function(job){
+
+        let jobTitle = job.querySelector('h3').innerText.toLowerCase();
+        let jobInfo = job.querySelector('p').innerText.toLowerCase();
+
+        if(
+            jobTitle.includes(titleValue) &&
+            jobInfo.includes(locationValue)
+        ){
+            job.style.display = "flex";
+        } else {
+            job.style.display = "none";
+        }
+
+    });
+}
+
+function resetSearch(){
+    searchTitle.value = "";
+    searchLocation.value = "";
+
+    let jobs = document.querySelectorAll('.job-card');
+    jobs.forEach(function(job){
+        job.style.display = "flex";
+    });
+}
+
+updateCount();
+
+</script>
+
+</body>
+</html>
